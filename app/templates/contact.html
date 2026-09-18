@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Contacto - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 90px; padding-bottom: 3rem;">
+  <div class="section-header">
+    <h2>Contacto</h2>
+    <p>Estamos aquí para ayudarte a encontrar tu próxima propiedad</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 900px; margin: 0 auto;">
+    <div>
+      <div class="contact-card" style="height: 100%;">
+        <h3>Información de contacto</h3>
+        <p style="margin: 1rem 0;"><strong>📞 Teléfono:</strong><br>{{ settings.phone }}</p>
+        <p style="margin: 1rem 0;"><strong>💬 WhatsApp:</strong><br>{{ settings.whatsapp }}</p>
+        <p style="margin: 1rem 0;"><strong>✉️ Email:</strong><br>{{ settings.email }}</p>
+        <p style="margin: 1rem 0;"><strong>📍 Dirección:</strong><br>{{ settings.address }}</p>
+        
+        <a href="https://wa.me/{{ settings.whatsapp }}" class="btn btn-whatsapp" style="width: 100%; margin-top: 1rem;" target="_blank" rel="noopener">
+          Escribir por WhatsApp
+        </a>
+      </div>
+    </div>
+    
+    <div>
+      <div class="contact-card">
+        <h3>Envíanos un mensaje</h3>
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Nombre *</label>
+            {{ form.name(class="form-control") }}
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Email *</label>
+            {{ form.email(class="form-control") }}
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Teléfono</label>
+            {{ form.phone(class="form-control") }}
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Asunto</label>
+            {{ form.subject(class="form-control") }}
+          </div>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Mensaje *</label>
+            {{ form.message(class="form-control", rows=4) }}
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar mensaje</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@media (max-width: 768px) {
+  .container > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
+{% endblock %}

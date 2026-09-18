@@ -1,0 +1,65 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Configuración{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 1.5rem; color: var(--primary);">Configuración del sitio</h1>
+
+<form method="POST" style="max-width: 700px;">
+  {{ form.hidden_tag() }}
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem;">Empresa</h3>
+    
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Nombre de la empresa *</label>
+      {{ form.company_name(class="form-control") }}
+    </div>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Teléfono *</label>
+      {{ form.phone(class="form-control") }}
+    </div>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>WhatsApp (solo números, ej: 50499999999) *</label>
+      {{ form.whatsapp(class="form-control") }}
+    </div>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Email *</label>
+      {{ form.email(class="form-control") }}
+    </div>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Dirección</label>
+      {{ form.address(class="form-control") }}
+    </div>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Texto "Nosotros"</label>
+      {{ form.about_text(class="form-control", rows=5) }}
+    </div>
+  </div>
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem;">Banner principal</h3>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Título del banner</label>
+      {{ form.hero_title(class="form-control") }}
+    </div>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Subtítulo del banner</label>
+      {{ form.hero_subtitle(class="form-control") }}
+    </div>
+  </div>
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem;">Redes sociales</h3>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Facebook URL</label>
+      {{ form.facebook(class="form-control") }}
+    </div>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Instagram URL</label>
+      {{ form.instagram(class="form-control") }}
+    </div>
+  </div>
+  
+  <button type="submit" class="btn btn-primary btn-lg">Guardar configuración</button>
+</form>
+{% endblock %}

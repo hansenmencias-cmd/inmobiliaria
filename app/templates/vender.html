@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Vender o Alquilar - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 90px; padding-bottom: 3rem;">
+  <div class="section-header">
+    <h2>Vende o alquila con nosotros</h2>
+    <p>Publicamos tu propiedad y te conectamos con compradores e inquilinos serios</p>
+  </div>
+  
+  <div style="max-width: 700px; margin: 0 auto; text-align: center;">
+    <div style="background: var(--white); padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 2rem;">
+      <h3 style="color: var(--primary); margin-bottom: 1rem;">¿Cómo funciona?</h3>
+      <div style="text-align: left; line-height: 1.8;">
+        <p><strong>1.</strong> Contáctanos por WhatsApp o teléfono y cuéntanos sobre tu propiedad.</p>
+        <p><strong>2.</strong> Nuestro equipo visita, fotografía y valora tu inmueble.</p>
+        <p><strong>3.</strong> Publicamos en nuestra plataforma con máxima visibilidad.</p>
+        <p><strong>4.</strong> Te conectamos con clientes interesados y te acompañamos hasta el cierre.</p>
+      </div>
+    </div>
+    
+    <a href="https://wa.me/{{ settings.whatsapp }}?text=Hola,%20quiero%20publicar%20mi%20propiedad" 
+       class="btn btn-whatsapp btn-lg" target="_blank" rel="noopener">
+      💬 Contactar por WhatsApp
+    </a>
+    <a href="tel:{{ settings.phone }}" class="btn btn-dark btn-lg" style="margin-left: 0.5rem;">
+      📞 Llamar
+    </a>
+  </div>
+</div>
+{% endblock %}

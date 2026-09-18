@@ -1,0 +1,44 @@
+<article class="property-card">
+  <div class="property-card-img">
+    <a href="{{ url_for('public.property_detail', slug=prop.slug) }}">
+      <img src="{{ prop.get_main_image_url() }}" 
+           alt="{{ prop.title }}" 
+           loading="lazy"
+           onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22300%22%3E%3Crect fill=%22%23e2e8f0%22 width=%22400%22 height=%22300%22/%3E%3Ctext fill=%22%2364748b%22 font-family=%22sans-serif%22 font-size=%2218%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ESin imagen%3C/text%3E%3C/svg%3E'">
+    </a>
+    <span class="property-badge {{ prop.get_status_class() }}">{{ prop.get_status_label() }}</span>
+    <span class="property-type-badge">{{ prop.property_type|capitalize }}</span>
+  </div>
+  <div class="property-card-body">
+    <h3>
+      <a href="{{ url_for('public.property_detail', slug=prop.slug) }}" style="color: inherit;">
+        {{ prop.title }}
+      </a>
+    </h3>
+    <div class="property-price">
+      {% if prop.currency == 'HNL' %}L{% elif prop.currency == 'EUR' %}€{% else %}${% endif %}{{ "{:,.0f}".format(prop.price) }}
+      {% if prop.transaction_type == 'alquiler' %}<small style="font-size: 0.7em; font-weight: 500; color: var(--gray-500);">/mes</small>{% endif %}
+    </div>
+    <div class="property-location">
+      <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+      {{ prop.location }}, {{ prop.city }}
+    </div>
+    <div class="property-specs">
+      {% if prop.bedrooms %}
+      <span title="Habitaciones">🛏 {{ prop.bedrooms }}</span>
+      {% endif %}
+      {% if prop.bathrooms %}
+      <span title="Baños">🚿 {{ prop.bathrooms }}</span>
+      {% endif %}
+      {% if prop.area_construction %}
+      <span title="Construcción">📐 {{ prop.area_construction|int }} m²</span>
+      {% endif %}
+      {% if prop.area_land and not prop.area_construction %}
+      <span title="Terreno">🌳 {{ prop.area_land|int }} m²</span>
+      {% endif %}
+    </div>
+    <div class="property-card-footer">
+      <a href="{{ url_for('public.property_detail', slug=prop.slug) }}" class="btn btn-dark" style="width: 100%;">Ver propiedad</a>
+    </div>
+  </div>
+</article>

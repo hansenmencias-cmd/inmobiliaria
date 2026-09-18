@@ -1,0 +1,54 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Mensajes{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 1.5rem; color: var(--primary);">Mensajes de contacto</h1>
+
+<table class="admin-table">
+  <thead>
+    <tr>
+      <th>Estado</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Teléfono</th>
+      <th>Asunto</th>
+      <th>Mensaje</th>
+      <th>Fecha</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for m in messages %}
+    <tr style="{% if not m.is_read %}background: #fef3c7;{% endif %}">
+      <td>{% if m.is_read %}Leído{% else %}<strong>Nuevo</strong>{% endif %}</td>
+      <td>{{ m.name }}</td>
+      <td><a href="mailto:{{ m.email }}">{{ m.email }}</a></td>
+      <td>{{ m.phone or '-' }}</td>
+      <td>{{ m.subject or '-' }}</td>
+      <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">{{ m.message[:80] }}{% if m.message|length > 80 %}...{% endif %}</td>
+      <td>{{ m.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+      <td>
+        {% if not m.is_read %}
+        <form method="POST" action="{{ url_for('admin.mark_read', id=m.id) }}">
+          <button type="submit" class="btn btn-sm btn-outline">Marcar leído</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray-500);">No hay mensajes</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if pagination.pages > 1 %}
+<div class="pagination">
+  {% for p in pagination.iter_pages() %}
+    {% if p %}
+      {% if p == pagination.page %}<span class="active">{{ p }}</span>
+      {% else %}<a href="{{ url_for('admin.messages', page=p) }}">{{ p }}</a>{% endif %}
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

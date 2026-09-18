@@ -1,0 +1,17 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+instance/*.db
+instance/*.db-journal
+app/static/uploads/images/*
+app/static/uploads/videos/*
+app/static/uploads/thumbs/*
+!app/static/uploads/images/.gitkeep
+!app/static/uploads/videos/.gitkeep
+!app/static/uploads/thumbs/.gitkeep
+.DS_Store
+*.log
+.idea/
+.vscode/

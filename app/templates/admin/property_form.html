@@ -1,0 +1,221 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 1.5rem; color: var(--primary);">{{ title }}</h1>
+
+<form method="POST" enctype="multipart/form-data" style="max-width: 900px;">
+  {{ form.hidden_tag() }}
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem; color: var(--primary);">Información básica</h3>
+    
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Título *</label>
+      {{ form.title(class="form-control", placeholder="Ej: Casa moderna en Colonia Kennedy") }}
+    </div>
+    
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Descripción completa *</label>
+      {{ form.description(class="form-control", rows=6, placeholder="Describe la propiedad en detalle...") }}
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="form-group">
+        <label>Precio *</label>
+        {{ form.price(class="form-control", step="0.01") }}
+      </div>
+      <div class="form-group">
+        <label>Moneda</label>
+        {{ form.currency(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label>Transacción *</label>
+        {{ form.transaction_type(class="form-control") }}
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="form-group">
+        <label>Tipo de propiedad *</label>
+        {{ form.property_type(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label>Estado *</label>
+        {{ form.status(class="form-control") }}
+      </div>
+    </div>
+  </div>
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem; color: var(--primary);">Ubicación</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="form-group">
+        <label>Ciudad *</label>
+        {{ form.city(class="form-control", placeholder="Tegucigalpa") }}
+      </div>
+      <div class="form-group">
+        <label>Zona / Ubicación *</label>
+        {{ form.location(class="form-control", placeholder="Colonia Kennedy") }}
+      </div>
+    </div>
+    
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Dirección completa</label>
+      {{ form.address(class="form-control") }}
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="form-group">
+        <label>Latitud (mapa)</label>
+        {{ form.latitude(class="form-control", step="any", placeholder="14.0723") }}
+      </div>
+      <div class="form-group">
+        <label>Longitud (mapa)</label>
+        {{ form.longitude(class="form-control", step="any", placeholder="-87.1921") }}
+      </div>
+    </div>
+    <p style="font-size: 0.8rem; color: var(--gray-500); margin-top: 0.5rem;">
+      Tip: Busca la dirección en Google Maps, haz clic derecho y "Qué hay aquí" para obtener coordenadas.
+    </p>
+  </div>
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem; color: var(--primary);">Características</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="form-group">
+        <label>Habitaciones</label>
+        {{ form.bedrooms(class="form-control", min=0) }}
+      </div>
+      <div class="form-group">
+        <label>Baños</label>
+        {{ form.bathrooms(class="form-control", min=0) }}
+      </div>
+      <div class="form-group">
+        <label>m2 Construcción</label>
+        {{ form.area_construction(class="form-control", step="0.01") }}
+      </div>
+      <div class="form-group">
+        <label>m2 Terreno</label>
+        {{ form.area_land(class="form-control", step="0.01") }}
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>Características adicionales</label>
+      {{ form.features(class="form-control", rows=2, placeholder="Piscina, Jardín, Garaje, Seguridad 24h, ...") }}
+      <small style="color: var(--gray-500);">Separadas por comas</small>
+    </div>
+  </div>
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem; color: var(--primary);">Fotografías</h3>
+    
+    {% if is_edit and prop and prop.images.count() > 0 %}
+    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.25rem;">
+      {% for img in prop.images %}
+      <div style="position: relative; width: 120px;">
+        <img src="{{ img.get_url() }}" alt="" style="width: 120px; height: 90px; object-fit: cover; border-radius: 8px; border: {% if img.is_main %}3px solid var(--accent){% else %}1px solid var(--gray-200){% endif %};">
+        {% if img.is_main %}<span style="position: absolute; top: 4px; left: 4px; background: var(--accent); color: var(--primary); font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">PRINCIPAL</span>{% endif %}
+        <div style="display: flex; gap: 4px; margin-top: 4px;">
+          {% if not img.is_main %}
+          <form method="POST" action="{{ url_for('admin.set_main_image', prop_id=prop.id, img_id=img.id) }}" style="flex: 1;">
+            <button type="submit" class="btn btn-sm btn-outline" style="width: 100%; font-size: 0.7rem; padding: 2px;">Principal</button>
+          </form>
+          {% endif %}
+          <form method="POST" action="{{ url_for('admin.delete_image', prop_id=prop.id, img_id=img.id) }}" style="flex: 1;" onsubmit="return confirm('Eliminar imagen?');">
+            <button type="submit" class="btn btn-sm" style="width: 100%; background: var(--danger); color: white; font-size: 0.7rem; padding: 2px;">X</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Fotografía principal {% if not is_edit %}*{% endif %}</label>
+      {{ form.main_image(class="form-control", accept="image/*") }}
+      <div id="preview-main" style="margin-top: 0.5rem;"></div>
+    </div>
+    
+    <div class="form-group">
+      <label>Fotografías adicionales (puedes seleccionar varias)</label>
+      {{ form.images(class="form-control", accept="image/*", multiple=true) }}
+      <div id="preview-images" style="margin-top: 0.5rem; display: flex; flex-wrap: wrap;"></div>
+      <small style="color: var(--gray-500);">Desde la galería del teléfono o computadora. Formatos: JPG, PNG, WEBP.</small>
+    </div>
+  </div>
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem; color: var(--primary);">Videos</h3>
+    
+    {% if is_edit and prop and prop.videos.count() > 0 %}
+    <div style="margin-bottom: 1.25rem;">
+      {% for vid in prop.videos %}
+      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+        <video src="{{ vid.get_url() }}" style="width: 120px; height: 70px; object-fit: cover; border-radius: 6px;" controls></video>
+        <form method="POST" action="{{ url_for('admin.delete_video', prop_id=prop.id, vid_id=vid.id) }}" onsubmit="return confirm('Eliminar video?');">
+          <button type="submit" class="btn btn-sm" style="background: var(--danger); color: white;">Eliminar</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="form-group">
+      <label>Subir videos (MP4, WEBM, MOV)</label>
+      {{ form.videos(class="form-control", accept="video/*", multiple=true) }}
+      <small style="color: var(--gray-500);">Puedes seleccionar varios. Tamaño máximo recomendado: 50 MB por video.</small>
+    </div>
+  </div>
+  
+  <div style="background: var(--white); padding: 1.75rem; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 1.25rem; color: var(--primary);">SEO y Contacto</h3>
+    
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Título SEO</label>
+      {{ form.seo_title(class="form-control") }}
+    </div>
+    <div class="form-group" style="margin-bottom: 1rem;">
+      <label>Descripción SEO</label>
+      {{ form.seo_description(class="form-control") }}
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+      <div class="form-group">
+        <label>Teléfono contacto</label>
+        {{ form.contact_phone(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label>WhatsApp</label>
+        {{ form.contact_whatsapp(class="form-control", placeholder="50499999999") }}
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        {{ form.contact_email(class="form-control") }}
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 400;">
+        {{ form.published() }} Publicada (visible en el sitio)
+      </label>
+    </div>
+  </div>
+  
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+    <button type="submit" class="btn btn-primary btn-lg">Guardar propiedad</button>
+    <a href="{{ url_for('admin.properties_list') }}" class="btn btn-outline btn-lg">Cancelar</a>
+  </div>
+</form>
+
+<style>
+@media (max-width: 768px) {
+  div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
+{% endblock %}

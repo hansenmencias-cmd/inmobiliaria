@@ -1,0 +1,96 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 style="margin-bottom: 1.5rem; color: var(--primary);">Dashboard</h1>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-value">{{ total }}</div>
+    <div class="stat-label">Total propiedades</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color: var(--success);">{{ available }}</div>
+    <div class="stat-label">Disponibles</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color: var(--danger);">{{ sold }}</div>
+    <div class="stat-label">Vendidas</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color: #7c3aed;">{{ rented }}</div>
+    <div class="stat-label">Alquiladas</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color: var(--warning);">{{ reserved }}</div>
+    <div class="stat-label">Reservadas</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ total_views }}</div>
+    <div class="stat-label">Visitas totales</div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+  <div>
+    <h3 style="margin-bottom: 1rem;">Más visitadas</h3>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Propiedad</th>
+          <th>Vistas</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in top_properties %}
+        <tr>
+          <td><a href="{{ url_for('admin.edit_property', id=p.id) }}">{{ p.title[:40] }}</a></td>
+          <td>{{ p.views }}</td>
+          <td><span class="property-badge {{ p.get_status_class() }}" style="position: static; font-size: 0.7rem;">{{ p.get_status_label() }}</span></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" style="text-align: center; color: var(--gray-500);">Sin datos</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <div>
+    <h3 style="margin-bottom: 1rem;">Mensajes recientes {% if unread %}<span style="background: var(--danger); color: white; padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.75rem;">{{ unread }} nuevos</span>{% endif %}</h3>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>De</th>
+          <th>Asunto</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in recent_messages %}
+        <tr style="{% if not m.is_read %}font-weight: 600;{% endif %}">
+          <td>{{ m.name }}</td>
+          <td>{{ (m.subject or 'Sin asunto')[:30] }}</td>
+          <td>{{ m.created_at.strftime('%d/%m/%Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" style="text-align: center; color: var(--gray-500);">Sin mensajes</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{{ url_for('admin.messages') }}" style="display: inline-block; margin-top: 0.75rem; font-size: 0.9rem;">Ver todos →</a>
+  </div>
+</div>
+
+<div style="margin-top: 2rem;">
+  <a href="{{ url_for('admin.add_property') }}" class="btn btn-primary btn-lg">➕ Agregar nueva propiedad</a>
+</div>
+
+<style>
+@media (max-width: 768px) {
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
+{% endblock %}

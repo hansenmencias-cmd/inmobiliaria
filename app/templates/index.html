@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}{{ company_name }} - Encuentra tu propiedad ideal{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>{{ settings.hero_title or 'Encuentra tu propiedad ideal' }}</h1>
+    <p>{{ settings.hero_subtitle or 'Casas, apartamentos, solares y más. La mejor selección del mercado.' }}</p>
+    
+    <form action="{{ url_for('public.properties') }}" method="GET" class="hero-search">
+      <div class="form-group">
+        <label>Tipo</label>
+        <select name="property_type" class="form-control">
+          <option value="">Todos</option>
+          {% for key, label in property_types.items() %}
+          <option value="{{ key }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Transacción</label>
+        <select name="transaction_type" class="form-control">
+          <option value="">Venta y Alquiler</option>
+          <option value="venta">Venta</option>
+          <option value="alquiler">Alquiler</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Ciudad</label>
+        <input type="text" name="city" class="form-control" placeholder="Ej: Tegucigalpa">
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Buscar</button>
+    </form>
+    
+    <div style="margin-top: 1.5rem;">
+      <a href="{{ url_for('public.properties') }}" class="btn btn-outline" style="border-color: rgba(255,255,255,0.5); color: white;">
+        Explorar todas las propiedades →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured -->
+{% if featured %}
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Propiedades destacadas</h2>
+      <p>Las más populares y visitadas</p>
+    </div>
+    <div class="properties-grid">
+      {% for prop in featured %}
+      {% include "includes/property_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Recent -->
+{% if recent %}
+<section class="section" style="background: var(--white);">
+  <div class="container">
+    <div class="section-header">
+      <h2>Recién agregadas</h2>
+      <p>Las últimas propiedades publicadas</p>
+    </div>
+    <div class="properties-grid">
+      {% for prop in recent %}
+      {% include "includes/property_card.html" %}
+      {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: 2.5rem;">
+      <a href="{{ url_for('public.properties') }}" class="btn btn-dark btn-lg">Ver todas las propiedades</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="section" style="background: linear-gradient(135deg, var(--primary), #0d3b66); color: white; text-align: center;">
+  <div class="container">
+    <h2 style="color: white; margin-bottom: 0.75rem;">¿Quieres vender o alquilar tu propiedad?</h2>
+    <p style="opacity: 0.9; margin-bottom: 1.5rem; font-size: 1.1rem;">Te ayudamos a encontrar el comprador o inquilino ideal.</p>
+    <a href="{{ url_for('public.vender') }}" class="btn btn-primary btn-lg">Publicar mi propiedad</a>
+  </div>
+</section>
+{% endblock %}

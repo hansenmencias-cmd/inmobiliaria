@@ -1,0 +1,91 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Propiedades{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+  <h1 style="color: var(--primary); margin: 0;">Propiedades</h1>
+  <a href="{{ url_for('admin.add_property') }}" class="btn btn-primary">➕ Nueva propiedad</a>
+</div>
+
+<form method="GET" style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+  <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Buscar..." style="max-width: 250px;">
+  <select name="status" class="form-control" style="max-width: 160px;">
+    <option value="">Todos los estados</option>
+    <option value="disponible" {% if status == 'disponible' %}selected{% endif %}>Disponible</option>
+    <option value="vendida" {% if status == 'vendida' %}selected{% endif %}>Vendida</option>
+    <option value="alquilada" {% if status == 'alquilada' %}selected{% endif %}>Alquilada</option>
+    <option value="reservada" {% if status == 'reservada' %}selected{% endif %}>Reservada</option>
+  </select>
+  <button type="submit" class="btn btn-dark btn-sm">Filtrar</button>
+</form>
+
+<div style="overflow-x: auto;">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Título</th>
+        <th>Precio</th>
+        <th>Tipo</th>
+        <th>Ciudad</th>
+        <th>Estado</th>
+        <th>Vistas</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in properties %}
+      <tr>
+        <td>
+          <img src="{{ p.get_main_image_url() }}" alt="" style="width: 60px; height: 45px; object-fit: cover; border-radius: 6px;"
+               onerror="this.style.background='#e2e8f0'">
+        </td>
+        <td>
+          <a href="{{ url_for('admin.edit_property', id=p.id) }}" style="font-weight: 600;">{{ p.title[:40] }}</a>
+          {% if not p.published %}<br><small style="color: var(--danger);">No publicada</small>{% endif %}
+        </td>
+        <td>${{ "{:,.0f}".format(p.price) }}</td>
+        <td>{{ p.property_type|capitalize }}</td>
+        <td>{{ p.city }}</td>
+        <td><span class="property-badge {{ p.get_status_class() }}" style="position: static; font-size: 0.7rem;">{{ p.get_status_label() }}</span></td>
+        <td>{{ p.views }}</td>
+        <td style="white-space: nowrap;">
+          <a href="{{ url_for('public.property_detail', slug=p.slug) }}" class="btn btn-sm btn-outline" target="_blank" title="Ver">👁</a>
+          <a href="{{ url_for('admin.edit_property', id=p.id) }}" class="btn btn-sm btn-dark" title="Editar">✏️</a>
+          <form method="POST" action="{{ url_for('admin.delete_property', id=p.id) }}" style="display: inline;" 
+                onsubmit="return confirm('¿Eliminar permanentemente esta propiedad?');">
+            <button type="submit" class="btn btn-sm" style="background: var(--danger); color: white;" title="Eliminar">🗑</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray-500);">
+          No hay propiedades. <a href="{{ url_for('admin.add_property') }}">Agregar la primera</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if pagination.pages > 1 %}
+<div class="pagination">
+  {% if pagination.has_prev %}
+  <a href="{{ url_for('admin.properties_list', page=pagination.prev_num, status=status, q=q) }}">←</a>
+  {% endif %}
+  {% for p in pagination.iter_pages() %}
+    {% if p %}
+      {% if p == pagination.page %}
+      <span class="active">{{ p }}</span>
+      {% else %}
+      <a href="{{ url_for('admin.properties_list', page=p, status=status, q=q) }}">{{ p }}</a>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+  {% if pagination.has_next %}
+  <a href="{{ url_for('admin.properties_list', page=pagination.next_num, status=status, q=q) }}">→</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
